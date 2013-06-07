@@ -4,7 +4,7 @@ A 4X game with time travel
 
 '''
 
-
+import params
 
 class GameStateStorage(object):
     def __init__(self):
@@ -21,6 +21,20 @@ class GameStateStorage(object):
     def loadGame(self, filename):
         self.gameStates ######### GET THIS FROM FILE #########
         return loadState(max(self.gameStates.keys()))
+
+class Simulation(object):
+    def __init__(self):
+
+        self.width
+        self.slantyHeight
+        self.grid = {}
+
+    def createGrid(self):
+        for i in xrange(self.width):
+            for j in xrange(self.slantyHeight):
+                self.grid[(i,j)] = Cell(self, (i,j))
+        for cell in self.grid.values():
+            cell.findNeighbors()
 
 
 class Player(object):
@@ -58,9 +72,9 @@ class Player(object):
 
 
 class Cell(object):
-    def __init__(self, context, location):
+    def __init__(self, context, coords):
         self.simulation = context
-        self.location = location
+        self.coords = coords
 
         self.terrain
 
@@ -98,20 +112,54 @@ class Cell(object):
     def displayInfoTo(self, player):
         pass
 
+class Unit(object):
+    
+    def __init__(self, context, unitType): # 0, 1, 2
+        self.owner = context
+        self.unitType = unitType
+        self.typeName = params.units[unitType]
+        self.HP = params.unitInfo[unitType]['hitpoints']
+        self.attackPower = params.unitInfo[unitType]['attackPower']
+        self.attackRange = params.unitInfo[unitType]['attackRange']
+        self.terrainEffect = {}
+        allTerrainEffects = params.terrainEffect
+        for uType, terrain in allTerrainEffects:
+            if uType == self.unitType:
+                self.terrainEffect[terrain] = allTerrainEffects[(uType, terrain)]
 
+        self.location ##### a cell with coords and terrain attributes
+        self.terrain   #########
+        self.visibleLocations = {} # cell: distance
 
-class Simulation(object):
-    def __init__(self):
+    def attack(self, defendingUnit):
+        SOMETHING = defendingUnit.defend
 
-        self.width
-        self.slantyHeight
-        self.grid = {}
+    def defend(self, attackingUnit):
+        pass
 
-    def createGrid(self):
-        for i in xrange(self.width):
-            for j in xrange(self.slantyHeight):
-                self.grid[(i,j)] = Cell(self, (i,j))
-        for cell in self.grid.values():
-            cell.findNeighbors()
+    def moveTo(self, coords):
+        pass
 
+    def moveDirection(self, direction):
+        # update location and terrain and sightCoords and total player sight
+
+        # after moving,
+        self.updateSight()
+
+    def updateSight(self): # call when moving
+        baseRadius = params.terrainInfo[self.terrain]['sightRadius']
+
+        # tell old visible locations not to show to the player
+        for location in self.visibleLocations:
+            
+
+        # replace old visible locations with new visible locations
+
+        # tell new visible locations to show to player
+        
+        for i in xrange(baseRadius):
+            for location in self.visibleLocations:
+                self.visibleLocations.update
+        
+        
 
